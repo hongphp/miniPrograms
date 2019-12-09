@@ -31,8 +31,9 @@ class redisLogDelete extends Command {
      *
      * @return mixed
      */
-    public function handle(Redis $redis)
+    public function handle()
     {
+        $redis = Redis::connection();
         $length = $redis->LLEN('tangchen:request');
         if($length>10000) {
             $redis->LTRIM('tangchen:request',0,10000);

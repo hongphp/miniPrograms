@@ -24,6 +24,7 @@ Route::group(['prefix' => 'api/v1/'],function(){
     Route::any('login', 'UserController@login');
     Route::any('user_password', 'UserController@update');
     Route::get('news_list', 'NewsController@newsList');
+    Route::get('hot_list', 'NewsController@hotList');
     Route::get('get_comment', 'NewsController@getComment');
     Route::post('post_comment', 'NewsController@postComment');
 });

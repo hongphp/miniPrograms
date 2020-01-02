@@ -31,4 +31,13 @@ class NewsController extends Controller
         return response()->json(['code'=>2, 'msg'=>'提交成功！']);
     }
 
+
+    public function hotList() {
+
+        $url = 'https://m.weibo.cn/api/container/getIndex?containerid=102803&openApp=0';
+        $res = http_request($url);
+        $obj = json_decode($res);
+       return response()->json($obj->data->cards);
+    }
+
 }

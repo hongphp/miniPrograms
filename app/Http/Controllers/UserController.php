@@ -37,12 +37,12 @@ class UserController extends Controller
     public function login(UserRequest $request) {
         $arr = $request->only(['ddusername', 'password']);
         if ($request->errVal) {
-            return response()->json(['code' => -1, 'msg' => '用户名或密码错误！']);
+            return response()->json(['code' => -1, 'msg' => '参数错误！']);
         }
 
         $token = auth('user')->attempt($arr);
         if ($token === false) {
-            return response()->json(['code' => -1, 'msg' => '用户名或密码错误！']);
+            return response()->json(['code' => -2, 'msg' => '用户名或密码错误！']);
         } else { //验证成功
             $user = app(JWTAuth::class)->setToken($token)->toUser();
             return response()->json(['code' => 1, 'token'=>$token, 'data'=>$user]);

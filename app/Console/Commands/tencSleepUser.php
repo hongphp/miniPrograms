@@ -41,7 +41,7 @@ class tencSleepUser extends Command {
         $date = date('Y-m-d',time()-3600*24);
         $page = 1;
         do {
-            $res = http_request("ht.qhjlhc.com/index/index/qqNews?Date=" . $date . "&page=" . $page);
+            $res = http_request("127.0.0.1/index/index/qqNews?Date=" . $date . "&page=" . $page);
             if($res==false) {
 
                 $redis->lpush('txErrorlog',$date."第".$page."页");

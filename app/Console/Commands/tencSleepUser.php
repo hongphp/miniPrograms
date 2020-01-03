@@ -54,7 +54,7 @@ class tencSleepUser extends Command {
         }
         unset($page,$res);
         //去重
-        do{$all = DB::select(' SELECT	max(id) as mid	FROM silence_user where report="?" GROUP BY	imei HAVING count(imei)>1',[$date]);
+        do{$all = DB::select(' SELECT	max(id) as mid	FROM silence_user where report="'.$date.'" GROUP BY	imei HAVING count(imei)>1');
             foreach ($all as $v) {
                 DB::table('silence_user')->where('id',$v->mid)->delete();
             }

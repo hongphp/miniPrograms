@@ -37,6 +37,7 @@ class tencSleepUser extends Command {
         ini_set('memory_limit','80M');
         set_time_limit(0);
         ignore_user_abort();
+	date_default_timezone_set('Asia/Shanghai');
         $redis = Redis::connection();
         $date = date('Y-m-d',time()-3600*24);
         $redis->lpush('doLog',date('Y-m-d H:i:s',time()));

@@ -39,6 +39,7 @@ class tencSleepUser extends Command {
         ignore_user_abort();
         $redis = Redis::connection();
         $date = date('Y-m-d',time()-3600*24);
+        $redis->lpush('doLog',date('Y-m-d H:i:s',time()));
         $page = 1;
         do {
             $res = http_request("127.0.0.1/index/index/qqNews?Date=" . $date . "&page=" . $page);
@@ -51,6 +52,9 @@ class tencSleepUser extends Command {
         }while($res==='1');
         if($res == 'ok') {
             $redis->lpush('txsucesslog',$date."第".$page."页");
+        }
+        else {
+            $redis->lpush('txErrorlog',$res);
         }
         unset($page,$res);
         //去重

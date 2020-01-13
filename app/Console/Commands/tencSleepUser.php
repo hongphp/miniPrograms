@@ -39,7 +39,7 @@ class tencSleepUser extends Command {
         ignore_user_abort();
 	date_default_timezone_set('Asia/Shanghai');
         $redis = Redis::connection();
-        $date = date('Y-m-d',time()-3600*24);
+        $date = date('Y-m-d',time()-3600*24*4);
         $redis->lpush('doLog',date('Y-m-d H:i:s',time()));
         $page = 1;
         do {

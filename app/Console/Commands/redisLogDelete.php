@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 
 class redisLogDelete extends Command {
@@ -42,6 +43,8 @@ class redisLogDelete extends Command {
         if($length>10000) {
             $redis->LTRIM('boss:request',0,10000);
         }
+        $date = date('Y-m-d',strtotime('-30days'));
+        DB::delete("DELETE FROM silence_user where report <'".$date."'");
 
     }
 }

@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
-        $schedule->command('redisLog:delete')->dailyAt('07:00');
+        $schedule->command('redisLog:delete')->dailyAt('7:00');
 
 
     }

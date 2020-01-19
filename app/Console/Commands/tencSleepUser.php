@@ -57,6 +57,7 @@ class tencSleepUser extends Command {
         else {
             $redis->lpush('txErrorlog',$res);
         }
+        $redis->set('teniid',0);
         unset($page,$res);
         //去重
         do{$all = DB::select(' SELECT	max(id) as mid	FROM silence_user where report="'.$date.'" GROUP BY	imei HAVING count(imei)>1');

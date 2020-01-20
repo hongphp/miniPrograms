@@ -34,6 +34,7 @@ class redisLogDelete extends Command {
      */
     public function handle()
     {
+        date_default_timezone_set('Asia/Shanghai');
         $redis = Redis::connection();
         $length = $redis->LLEN('tangchen:request');
         if($length>10000) {
@@ -45,6 +46,6 @@ class redisLogDelete extends Command {
         }
         $date = date('Y-m-d',strtotime('-30days'));
         DB::delete("DELETE FROM silence_user where report <'".$date."'");
-
+        $redis->lpush('doLog',$date.date('H:i:s',time()).'delete');
     }
 }

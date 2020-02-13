@@ -45,7 +45,7 @@ class redisLogDelete extends Command {
             $redis->LTRIM('boss:request',0,10000);
         }
         $date = date('Y-m-d',strtotime('-30days'));
-        DB::delete("DELETE FROM silence_user where report <'".$date."'");
+        //DB::delete("DELETE FROM silence_user where report <'".$date."'");
         $redis->lpush('doLog',$date.date('H:i:s',time()).'delete');
     }
 }

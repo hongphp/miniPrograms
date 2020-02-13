@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\DB;
 
 class tencSleepUser extends Command {
-    protected $signature = 'sleep_user:upload';
+    protected $signature = 'sleep_user:upload {date}';
 
     /**
      * The console command description.
@@ -39,11 +39,13 @@ class tencSleepUser extends Command {
         ignore_user_abort();
 	date_default_timezone_set('Asia/Shanghai');
         $redis = Redis::connection();
-        $date = date('Y-m-d',time()-3600*24*4);
-        $redis->lpush('doLog',date('Y-m-d H:i:s',time()));
+        $date = $this->argument('date');
+	$num = DB::table('silence_user')->where('report',$date)->select('id')->count();
+	echo $num; if($num>3000) exit();
+	$redis->lpush('doLog',date('Y-m-d H:i:s',time()));
         $page = 1;
         do {
-            $res = http_request("127.0.0.1/index/index/qqNews?Date=" . $date . "&page=" . $page);
+            $res = http_request("ht.qhjlhc.com/index/index/qqNews?Date=" . $date . "&page=" . $page);
             if($res==false) {
 
                 $redis->lpush('txErrorlog',$date."第".$page."页");

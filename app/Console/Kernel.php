@@ -25,9 +25,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')
-        //          ->hourly();
+        $date = date('Y-m-d',time()-3600*24*4);
         $schedule->command('redisLog:delete')->dailyAt('7:00');
-
+	$schedule->command('sleep_user:upload '.$date)->cron("*/15 8-9 * * *");
 
     }
 

@@ -36,12 +36,10 @@ class tencSleepUser extends Command {
     {
         ini_set('memory_limit','80M');
         set_time_limit(0);
-        ignore_user_abort();
-	date_default_timezone_set('Asia/Shanghai');
         $redis = Redis::connection();
         $date = $this->argument('date');
 	$num = DB::table('silence_user')->where('report',$date)->select('id')->count();
-	echo $num; if($num>3000) exit();
+	var_dump($num); if($num>3000) exit();
 	$redis->lpush('doLog',date('Y-m-d H:i:s',time()));
         $page = 1;
         do {
@@ -57,7 +55,8 @@ class tencSleepUser extends Command {
             $redis->lpush('txsucesslog',$date."第".$page."页");
         }
         else {
-            $redis->lpush('txErrorlog',$res);
+	    $p = $res?$res:$page;
+            $redis->lpush('txErrorlog',$p);
         }
         $redis->set('teniid',0);
         unset($page,$res);

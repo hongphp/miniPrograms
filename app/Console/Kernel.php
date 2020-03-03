@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
         $date = date('Y-m-d',time()-3600*24*4);
         $schedule->command('redisLog:delete')->dailyAt('7:00');
 	$schedule->command('sleep_user:upload '.$date)->cron("*/15 8-9 * * *");
-
+        $schedule->command('sleep_user:loop')->cron("* 13-22 * * *")->withoutOverlapping();
     }
 
     /**

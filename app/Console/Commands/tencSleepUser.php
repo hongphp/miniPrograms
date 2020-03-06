@@ -39,11 +39,11 @@ class tencSleepUser extends Command {
         $redis = Redis::connection();
         $date = $this->argument('date');
 	$num = DB::table('silence_user')->where('report',$date)->select('id')->count();
-	var_dump($num); if($num>3000) exit();
+	var_dump($num); if($num>10000) exit();
 	$redis->lpush('doLog',date('Y-m-d H:i:s',time()));
         $page = 1;
         do {
-            $res = http_request("ht.qhjlhc.com/index/index/qqNews?Date=" . $date . "&page=" . $page);
+            $res = http_request("183.237.68.98:9000/index/index/qqNews?Date=" . $date . "&page=" . $page);
             if($res==false) {
 
                 $redis->lpush('txErrorlog',$date."第".$page."页");

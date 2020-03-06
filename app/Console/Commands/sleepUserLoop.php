@@ -36,11 +36,14 @@ class sleepUserLoop extends Command {
         ini_set('memory_limit','80M');
         set_time_limit(0);
         $redis = Redis::connection();
+        if(date('H',time())==5 && date('i',time())==30) {
+            $redis->set('silence_date',date('Y-m-d',time()-3600*24*29));
+        }
         $date = $redis->get('silence_date');
         //跑到最近一天为止
-        if($date==date('Y-m-d',time()-3600*24*4)) exit();
-        $num = DB::table('silence_user')->where('report',$date)->select('id')->count();
-        if($num>5000) {
+        if($date==date('Y-m-d',time()-3600*24*3)) exit();
+        $num = DB::table('silence_user')->where('report',$date)->select('*')->count();
+        if($num>10000) {
             $newDate = date('Y-m-d',strtotime($date)+3600*24);
             $redis->set('silence_date',$newDate);
             exit();
@@ -48,7 +51,7 @@ class sleepUserLoop extends Command {
         $redis->lpush('doLog',date('Y-m-d H:i:s',time()));
         $page = 1;
         do {
-            $res = http_request("ht.qhjlhc.com/index/index/qqNews?Date=" . $date . "&page=" . $page);
+            $res = http_request("183.237.68.98:9000/index/index/qqNews?Date=" . $date . "&page=" . $page);
             if($res==false) {
 
                 $redis->lpush('txErrorlog',$date."第".$page."页");

@@ -14,7 +14,7 @@ class sleepUserLoop extends Command {
      * 注意:不支持多进程
      * @var string
      */
-    protected $description = '腾讯新闻sleep用户入库';
+    protected $description = '30天内腾讯新闻sleep用户入库';
 
     /**
      * Create a new command instance.
@@ -37,13 +37,15 @@ class sleepUserLoop extends Command {
         set_time_limit(0);
         $redis = Redis::connection();
         if(date('H',time())==5 && date('i',time())==30) {
+            // 5点半开始跑，设置起跑日期
             $redis->set('silence_date',date('Y-m-d',time()-3600*24*29));
         }
         $date = $redis->get('silence_date');
-        //跑到最近一天为止
+        //跑到最近一天就结束程序
         if($date==date('Y-m-d',time()-3600*24*3)) exit();
         $num = DB::table('silence_user')->where('report',$date)->select('*')->count();
         if($num>10000) {
+            // 当天跑完就修改日期，进入下一天
             $newDate = date('Y-m-d',strtotime($date)+3600*24);
             $redis->set('silence_date',$newDate);
             exit();
@@ -53,14 +55,14 @@ class sleepUserLoop extends Command {
         do {
             $res = http_request("183.237.68.98:9000/index/index/qqNews?Date=" . $date . "&page=" . $page);
             if($res==false) {
-
+                //失败则记录
                 $redis->lpush('txErrorlog',$date."第".$page."页");
                 echo'error';
             }
             $page++;
         }while($res==='1');
         if($res == 'ok') {
-            $redis->lpush('txsucesslog',$date."第".$page."页");
+            $redis->lpush('txsucesslog',$date."第".$page."页");//成功则记录
         }
         else {
             $p = $res?$res:$page;

@@ -40,12 +40,9 @@ class redisLogDelete extends Command {
         if($length>10000) {
             $redis->LTRIM('tangchen:request',0,10000);
         }
-        $length = $redis->LLEN('boss:request');
-        if($length>10000) {
-            $redis->LTRIM('boss:request',0,10000);
-        }
-        $date = date('Y-m-d',strtotime('-30days'));
-        //DB::delete("DELETE FROM silence_user where report <'".$date."'");
-        $redis->lpush('doLog',$date.date('H:i:s',time()).'delete');
+        $start = date('Y-m-d',strtotime('-30days'));
+        $end = date('Y-m-d',strtotime('-3days'));
+        DB::table('silence_user')->where('report','>',$start)->where('report','<',$end)->delete();
+        $redis->lpush('doLog',date('H:i:s',time()).' delete 30');
     }
 }

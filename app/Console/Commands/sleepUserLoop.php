@@ -36,7 +36,7 @@ class sleepUserLoop extends Command {
         ini_set('memory_limit','80M');
         set_time_limit(0);
         $redis = Redis::connection();
-        if(date('H',time())==5 && date('i',time())<30) {
+        if(date('H',time())==6 && date('i',time())<2) {
             // 5点半开始跑，设置起跑日期
             $redis->set('silence_date',date('Y-m-d',time()-3600*24*29));
             exit();
@@ -45,7 +45,7 @@ class sleepUserLoop extends Command {
         //跑到最近一天就结束程序
         if($date==date('Y-m-d',time()-3600*24*3)) exit();
         $num = DB::table('silence_user')->where('report',$date)->select('*')->count();
-        if($num>10000) {
+        if($num>8000) {
             // 当天跑完就修改日期，进入下一天
             $newDate = date('Y-m-d',strtotime($date)+3600*24);
             $redis->set('silence_date',$newDate);

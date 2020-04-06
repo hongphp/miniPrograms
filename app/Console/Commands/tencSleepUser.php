@@ -39,7 +39,7 @@ class tencSleepUser extends Command {
         $redis = Redis::connection();
         $date = $this->argument('date');
 	$num = DB::table('silence_user')->where('report',$date)->select('id')->count();
-	var_dump($num); if($num>10000) exit();
+	var_dump($num); if($num>1000) exit();
 	$redis->lpush('doLog',date('Y-m-d H:i:s',time()));
         $page = 1;
         do {

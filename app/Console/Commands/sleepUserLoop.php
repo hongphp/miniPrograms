@@ -44,8 +44,8 @@ class sleepUserLoop extends Command {
         $date = $redis->get('silence_date');
         //跑到最近一天就结束程序
         if($date==date('Y-m-d',time()-3600*24*3)) exit();
-        $num = DB::table('silence_user')->where('report',$date)->select('*')->count();
-        if($num>8000) {
+       	$flag = $redis->get('silence:'.$date,'');
+	if($flag=="ok") {
             // 当天跑完就修改日期，进入下一天
             $newDate = date('Y-m-d',strtotime($date)+3600*24);
             $redis->set('silence_date',$newDate);
@@ -63,7 +63,8 @@ class sleepUserLoop extends Command {
             $page++;
         }while($res==='1');
         if($res == 'ok') {
-            $redis->lpush('txsucesslog',$date."第".$page."页");//成功则记录
+		$redis->setex('silence:'.$date,3600,"ok");//立flag
+        	$redis->lpush('txsucesslog',$date."第".$page."页");//成功则记录
         }
         else {
             $p = $res?$res:$page;

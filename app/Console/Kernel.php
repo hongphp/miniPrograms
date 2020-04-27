@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')
         $schedule->command('redisLog:delete')->dailyAt('3:00');
         $schedule->command('sleep_user:loop')->cron("* 7-11 * * *")->withoutOverlapping();
-        $schedule->command('sleep_user:loop')->cron("*/10 8-9 * * *");
+        $schedule->command('warning:sleep')->cron("*/10 8-9 * * *");
     }
 
     /**

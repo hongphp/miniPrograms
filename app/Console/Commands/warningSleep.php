@@ -41,7 +41,7 @@ class warningSleep extends Command {
             http_request('https://sc.ftqq.com/SCU70950Td706ca17997ccd2e1d1d4d39dfba49b25e003627e0913.send?text='.urlencode('主人任务还没开始啊~'),'',[],3);
         }
         //9点未结束则预警
-        if(date("H")==9) {
+        if(date("H")==11) {
             $date = date("Y-m-d",time()-3600*24*4);
             $num = DB::table('silence_user')->where('report', $date)->count();
             if ($num == 0) {
